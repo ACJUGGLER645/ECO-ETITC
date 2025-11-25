@@ -1,0 +1,39 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "5001:5000"
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/eco_db
+      - SECRET_KEY=dev-secret
+    depends_on:
+      - db
+    networks:
+      - eco-network
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - eco-network
+
+  db:
+    image: postgres:13-alpine
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=eco_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - eco-network
+
+networks:
+  eco-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

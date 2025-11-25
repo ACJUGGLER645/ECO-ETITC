@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-sans antialiased text-gray-900 transition-colors duration-300;
+    background-image: url('/nature-bg.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.7);
+    z-index: -1;
+  }
+
+  body.dark::before {
+    background: rgba(0, 0, 0, 0.7);
+  }
+}
+
+/* Apple-Style Liquid Glass Utilities */
+.glass {
+  @apply backdrop-blur-xl border shadow-lg;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow:
+    0 8px 32px 0 rgba(31, 38, 135, 0.12),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+}
+
+.dark .glass {
+  background: rgba(30, 30, 30, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 8px 32px 0 rgba(0, 0, 0, 0.3),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.glass-card {
+  @apply glass rounded-3xl p-6;
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(115deg,
+      transparent 40%,
+      rgba(255, 255, 255, 0.08) 50%,
+      transparent 60%);
+  transform: rotate(45deg);
+  animation: subtleShimmer 6s infinite;
+}
+
+@keyframes subtleShimmer {
+
+  0%,
+  100% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.glass-card:hover::before {
+  animation-duration: 3s;
+}
+
+.btn-primary {
+  @apply text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  box-shadow:
+    0 2px 8px 0 rgba(16, 185, 129, 0.25),
+    0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 4px 12px 0 rgba(16, 185, 129, 0.3),
+    0 2px 4px 0 rgba(0, 0, 0, 0.08);
+}
