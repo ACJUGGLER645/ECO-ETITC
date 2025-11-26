@@ -437,7 +437,7 @@ const AntigravityPWA = () => {
                                         value={newComment}
                                         onChange={(e) => setNewComment(e.target.value)}
                                         placeholder="Comparte tus pensamientos..."
-                                        className="w-full p-4 rounded-xl bg-gray-50 dark:bg-gray-800 border-none focus:ring-2 focus:ring-primary outline-none transition-all mb-4"
+                                        className="w-full p-4 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white border-none focus:ring-2 focus:ring-primary outline-none transition-all mb-4"
                                         rows="3"
                                     />
                                     <button type="submit" className="btn-primary">
@@ -546,14 +546,14 @@ const AntigravityPWA = () => {
                                             placeholder="Título de tu publicación..."
                                             value={newForumPost.title}
                                             onChange={(e) => setNewForumPost({ ...newForumPost, title: e.target.value })}
-                                            className="w-full p-3 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 focus:border-primary focus:ring-2 focus:ring-primary/50 outline-none transition-all mb-3"
+                                            className="w-full p-3 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 focus:border-primary focus:ring-2 focus:ring-primary/50 outline-none transition-all mb-3"
                                             required
                                         />
                                         <textarea
                                             placeholder="Escribe tu mensaje..."
                                             value={newForumPost.content}
                                             onChange={(e) => setNewForumPost({ ...newForumPost, content: e.target.value })}
-                                            className="w-full p-3 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 focus:border-primary focus:ring-2 focus:ring-primary/50 outline-none transition-all mb-3"
+                                            className="w-full p-3 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 focus:border-primary focus:ring-2 focus:ring-primary/50 outline-none transition-all mb-3"
                                             rows="4"
                                             required
                                         />
@@ -645,7 +645,7 @@ const AntigravityPWA = () => {
                                         type="text"
                                         value={username}
                                         onChange={(e) => setUsername(e.target.value)}
-                                        className="w-full px-4 py-2 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 focus:border-primary focus:ring-2 focus:ring-primary/50 outline-none transition-all"
+                                        className="w-full px-4 py-2 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 focus:border-primary focus:ring-2 focus:ring-primary/50 outline-none transition-all"
                                         required
                                     />
                                 </div>
@@ -660,7 +660,7 @@ const AntigravityPWA = () => {
                                                 type="text"
                                                 value={name}
                                                 onChange={(e) => setName(e.target.value)}
-                                                className="w-full px-4 py-2 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 focus:border-primary focus:ring-2 focus:ring-primary/50 outline-none transition-all"
+                                                className="w-full px-4 py-2 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 focus:border-primary focus:ring-2 focus:ring-primary/50 outline-none transition-all"
                                                 required
                                             />
                                         </div>
@@ -673,7 +673,7 @@ const AntigravityPWA = () => {
                                                 type="text"
                                                 value={documentId}
                                                 onChange={(e) => setDocumentId(e.target.value)}
-                                                className="w-full px-4 py-2 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 focus:border-primary focus:ring-2 focus:ring-primary/50 outline-none transition-all"
+                                                className="w-full px-4 py-2 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 focus:border-primary focus:ring-2 focus:ring-primary/50 outline-none transition-all"
                                                 required
                                             />
                                         </div>
@@ -686,7 +686,7 @@ const AntigravityPWA = () => {
                                                 type="email"
                                                 value={email}
                                                 onChange={(e) => setEmail(e.target.value)}
-                                                className="w-full px-4 py-2 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 focus:border-primary focus:ring-2 focus:ring-primary/50 outline-none transition-all"
+                                                className="w-full px-4 py-2 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 focus:border-primary focus:ring-2 focus:ring-primary/50 outline-none transition-all"
                                                 required
                                             />
                                         </div>
@@ -701,7 +701,7 @@ const AntigravityPWA = () => {
                                         type="password"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        className="w-full px-4 py-2 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 focus:border-primary focus:ring-2 focus:ring-primary/50 outline-none transition-all"
+                                        className="w-full px-4 py-2 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 focus:border-primary focus:ring-2 focus:ring-primary/50 outline-none transition-all"
                                         required
                                     />
                                 </div>
@@ -715,7 +715,7 @@ const AntigravityPWA = () => {
                                     <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
                                 </div>
                                 <div className="relative flex justify-center text-sm">
-                                    <span className="px-2 bg-white dark:bg-gray-800 text-gray-500">O continúa con</span>
+                                    <span className="px-2 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">O continúa con</span>
                                 </div>
                             </div>
 
