@@ -13,7 +13,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
-cors = CORS(app, supports_credentials=True)
+# Configure CORS to allow requests from frontend
+# In production, replace "*" with your actual frontend domain (e.g., ["https://eco-etitc.vercel.app"])
+cors = CORS(app, supports_credentials=True, resources={r"/api/*": {"origins": "*"}})
 login_manager = LoginManager(app)
 
 # Models
