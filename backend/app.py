@@ -5,6 +5,7 @@ from flask_cors import CORS
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv
+import requests # Librería estándar para peticiones HTTP
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 
@@ -113,7 +114,7 @@ def google_auth():
     try:
         # Validar token llamando a la API de Google (UserInfo)
         # Esto funciona con el access_token que envía el frontend
-        google_response = google_requests.get(
+        google_response = requests.get(
             'https://www.googleapis.com/oauth2/v3/userinfo',
             headers={'Authorization': f'Bearer {access_token}'}
         )
