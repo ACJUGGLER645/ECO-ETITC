@@ -98,16 +98,25 @@ const AntigravityPWA = () => {
     const handleRegister = async (e) => {
         e.preventDefault();
         try {
-            await api.post('/api/register', { username, name, documentId, email, password });
-            setError('¡Registro exitoso! Por favor inicia sesión.');
-            setView('login');
-            setUsername('');
-            setName('');
-            setDocumentId('');
-            setEmail('');
-            setPassword('');
+            const res = await api.post('/api/register', { username, name, documentId, email, password });
+
+            // Verificación adicional para evitar falsos positivos si Vercel devuelve HTML (status 200) en vez de la API
+            if (res.status === 201) {
+                setError('¡Registro exitoso! Por favor inicia sesión.');
+                setView('login');
+                setUsername('');
+                setName('');
+                setDocumentId('');
+                setEmail('');
+                setPassword('');
+            } else {
+                // Si llegamos aquí pero no es 201, algo raro pasó (ej. recibimos HTML de Vercel)
+                console.warn("Respuesta inesperada del servidor:", res);
+                throw new Error("La conexión con el servidor no fue exitosa. Verifica la configuración.");
+            }
         } catch (err) {
-            const errorMsg = err.response?.data?.message || 'Error en el registro';
+            console.error("Error de registro:", err);
+            const errorMsg = err.response?.data?.message || 'Error en el registro. Verifica que el backend esté conectado.';
             setError(errorMsg);
         }
     };
