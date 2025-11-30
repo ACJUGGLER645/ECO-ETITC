@@ -166,10 +166,10 @@ const AntigravityPWA = () => {
     };
 
     const videos = [
-        { id: 'ZGfcf0D3R04', title: 'El Cambio Climático Explicado' },
-        { id: 'yiw6_JakZFc', title: 'Cómo Salvar el Planeta' },
-        { id: 'ipVxxxqwBQw', title: 'Energías Renovables' },
-        { id: 'wbR-5mHI6bo', title: 'La Importancia de Reciclar' },
+        { id: 'z4vHLa36Wsg', title: 'Cambio Climático | Lo que haces cuenta | NatGeo' },
+        { id: 'aWgHk8Mso0s', title: '¿Por qué cuidar el medio ambiente?' },
+        { id: 'o5bbeJR7Ddg', title: 'Hábitos que perjudican al medio ambiente' },
+        { id: 'CLq6tykbIrk', title: 'Para cuidar el ambiente, la conciencia no alcanza | TEDx' }
     ];
 
     return (
@@ -515,6 +515,55 @@ const AntigravityPWA = () => {
                                     Como colombianos, tenemos el privilegio de vivir en una de las naciones más bellas de la Tierra.
                                     Cuidar nuestra "casa común" empieza en nuestros hogares, barrios y ciudades.
                                 </p>
+                            </div>
+                        </article>
+
+                        {/* Fourth Article Section: Circular Economy */}
+                        <article className="glass-card mb-8">
+                            <header className="mb-6">
+                                <span className="inline-block px-3 py-1 rounded-full bg-green-500/10 text-green-600 text-xs font-bold mb-2">
+                                    INNOVACIÓN SOSTENIBLE
+                                </span>
+                                <h2 className="text-3xl md:text-4xl font-black text-gray-800 dark:text-white mb-4 leading-tight">
+                                    Economía Circular: Rediseñando el Futuro
+                                </h2>
+                                <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                                    <span>Por EcoTech Global</span>
+                                    <span>•</span>
+                                    <span>Diciembre 1, 2025</span>
+                                </div>
+                            </header>
+
+                            <div className="prose dark:prose-invert max-w-none text-gray-600 dark:text-gray-300 leading-relaxed">
+                                <p className="text-lg mb-4">
+                                    El modelo actual de "tomar, hacer, desechar" está llegando a su límite. La economía circular propone un cambio de paradigma:
+                                    un sistema donde los residuos se eliminan desde el diseño y los materiales se mantienen en uso el mayor tiempo posible.
+                                </p>
+
+                                <img
+                                    src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+                                    alt="Economía Circular Concepto"
+                                    className="w-full h-64 object-cover rounded-xl my-6 shadow-md"
+                                />
+
+                                <h3 className="text-2xl font-bold text-green-600 mb-3">Los 3 Pilares Fundamentales</h3>
+                                <ul className="list-disc list-inside mb-4 space-y-2">
+                                    <li><strong>Eliminar residuos y contaminación:</strong> Diseñar productos que no generen basura al final de su vida útil.</li>
+                                    <li><strong>Circular productos y materiales:</strong> Mantener los materiales en uso, ya sea como producto o como componentes.</li>
+                                    <li><strong>Regenerar la naturaleza:</strong> Devolver nutrientes al suelo y mejorar la biodiversidad en lugar de degradarla.</li>
+                                </ul>
+
+                                <h3 className="text-2xl font-bold text-green-600 mb-3">¿Cómo se Aplica en la Vida Real?</h3>
+                                <p className="mb-4">
+                                    Empresas que alquilan jeans en lugar de venderlos, teléfonos modulares que se pueden reparar fácilmente, y ciudades que
+                                    convierten sus residuos orgánicos en energía y compost. La economía circular no es solo reciclaje, es <strong>reinvención</strong>.
+                                </p>
+
+                                <div className="bg-green-500/10 border-l-4 border-green-500 p-4 rounded-r-xl my-6">
+                                    <p className="font-semibold text-gray-800 dark:text-white">
+                                        "En la naturaleza no existe la basura. Todo es alimento para otro sistema."
+                                    </p>
+                                </div>
                             </div>
                         </article>
 
