@@ -1,59 +1,188 @@
-# Guía de Configuración de Autenticación con Google
+# 🔐 Guía de Implementación: Google Auth en Render y Vercel
 
-Para implementar el inicio de sesión con Google ("Sign in with Google") en tu aplicación ECO-ETITC y desplegarla, necesitas seguir estos pasos.
+Esta guía explica cómo configurar la autenticación con Google para que funcione perfectamente con tu **Frontend en Vercel** y tu **Backend en Render**.
+
+---
+
+## 🏗️ Arquitectura de Autenticación
+
+1.  **Frontend (Vercel)**: El usuario hace clic en "Login con Google". Google le devuelve un token (JWT).
+2.  **Backend (Render)**: El frontend envía ese token a tu API (`/api/auth/google`).
+3.  **Validación**: El backend verifica con Google que el token sea real.
+4.  **Sesión**: Si es válido, el backend crea/busca al usuario en la base de datos y le inicia sesión.
+
+---
 
 ## 1. Configurar Google Cloud Console
 
+Para que Google acepte peticiones de tus dominios de Vercel y Render, debes configurarlo así:
+
 1.  Ve a [Google Cloud Console](https://console.cloud.google.com/).
-2.  Crea un **Nuevo Proyecto** (ej. `eco-etitc-auth`).
-3.  En el menú lateral, ve a **APIs & Services** > **Credentials**.
-4.  Haz clic en **Create Credentials** y selecciona **OAuth client ID**.
-5.  Si es la primera vez, te pedirá configurar la **Consent Screen** (Pantalla de consentimiento):
-    *   Selecciona **External** (para que cualquier usuario con cuenta Google pueda entrar).
-    *   Llena los datos básicos (Nombre de la App, correo de soporte, etc.).
-    *   En "Scopes", añade `userinfo.email`, `userinfo.profile` y `openid`.
-    *   Añade tu correo como "Test User" si la app está en modo prueba.
-6.  Vuelve a crear las credenciales **OAuth client ID**:
+2.  Crea un proyecto nuevo (ej. `eco-etitc-prod`).
+3.  Ve a **APIs & Services** > **OAuth consent screen**.
+    *   **User Type**: External.
+    *   Llena los datos obligatorios (Nombre, correos).
+    *   No necesitas verificar la app por ahora (mientras esté en modo "Testing").
+4.  Ve a **Credentials** > **Create Credentials** > **OAuth client ID**.
     *   **Application type**: Web application.
-    *   **Name**: Cliente Web ECO-ETITC.
-    *   **Authorized JavaScript origins**:
-        *   Para desarrollo local: `http://localhost:5173` y `http://localhost:5000` (o el puerto de tu backend).
-        *   **IMPORTANTE**: Cuando tengas tu dominio (ej. `https://eco-etitc.com`), DEBES agregarlo aquí.
-    *   **Authorized redirect URIs**:
-        *   Igual que arriba, añade las URLs de callback si usas redirección.
+    *   **Name**: `ECO-ETITC Production`.
 
-7.  Al finalizar, obtendrás un **Client ID** y un **Client Secret**.
-    *   El **Client ID** es público, va en el frontend.
-    *   El **Client Secret** es SECRETO, va en el backend (si validas el token ahí).
+### ⚠️ Configuración de URLs (¡CRÍTICO!)
 
-## 2. Implementación en el Código
+En la sección de URLs autorizadas, debes poner EXACTAMENTE esto:
 
-### Opción A: Firebase Authentication (Recomendada para Frontend)
-Es la forma más fácil. Google maneja todo y te da un objeto `user` listo.
+**Authorized JavaScript origins (Orígenes de JavaScript autorizados):**
+Aquí van las URLs desde donde se abre la ventana de login (tu Frontend).
+*   `http://localhost:5173` (Para pruebas locales)
+*   `https://eco-etitc.vercel.app` (Tu URL de Vercel - **Sin barra al final**)
 
-1.  Crea un proyecto en [Firebase Console](https://console.firebase.google.com/).
-2.  Habilita **Authentication** > **Sign-in method** > **Google**.
-3.  Instala Firebase en tu frontend: `npm install firebase`.
-4.  Crea un archivo `firebaseConfig.js` con las credenciales que te da Firebase.
-5.  Usa `signInWithPopup` en tu componente React.
+**Authorized redirect URIs (URIs de redireccionamiento autorizados):**
+*   `http://localhost:5173`
+*   `https://eco-etitc.vercel.app`
 
-### Opción B: Google Identity Services (Directo)
-Si no quieres usar Firebase.
+> **Nota**: Si tienes un dominio personalizado (ej. `www.eco-etitc.com`), agrégalo también.
 
-1.  Usa la librería `@react-oauth/google` en el frontend.
-2.  Envuelves tu app en `<GoogleOAuthProvider clientId="TU_CLIENT_ID">`.
-3.  Usas el componente `<GoogleLogin />` o el hook `useGoogleLogin`.
-4.  Al loguearse exitosamente, Google te devuelve un **Credential (JWT)**.
-5.  Envías ese JWT a tu backend Python (`/api/google-login`).
-6.  En Python, usas `google-auth` para verificar el token y crear/loguear al usuario en tu base de datos.
+5.  Al terminar, copia dos valores:
+    *   **Client ID**: (Público, empieza por `xxxx.apps.googleusercontent.com`)
+    *   **Client Secret**: (Privado, empieza por `GOCSPX-xxxx`)
 
-## 3. Requisitos para Despliegue
+---
 
-Para que Google Login funcione en producción:
+## 2. Configuración en Vercel (Frontend)
 
-1.  **Dominio HTTPS**: Google NO permite OAuth en dominios `http://` (excepto localhost). Necesitas un certificado SSL (la mayoría de hostings como Vercel/Render lo dan gratis).
-2.  **Verificación de Dominio**: En Google Cloud Console, debes agregar tu dominio autorizado.
-3.  **Políticas de Privacidad**: Google exige que tengas una URL con la Política de Privacidad de tu app visible.
+El frontend necesita el **Client ID** para mostrar el botón de Google.
 
-## 4. Costos
-*   **Google Identity / Firebase Auth**: Es gratuito para la mayoría de los casos de uso (hasta miles de usuarios activos mensuales).
+1.  Ve a tu proyecto en **Vercel**.
+2.  **Settings** > **Environment Variables**.
+3.  Agrega la variable:
+    *   **Key**: `VITE_GOOGLE_CLIENT_ID`
+    *   **Value**: (Pega tu Client ID aquí)
+4.  **Redespliega** tu proyecto para que tome el cambio.
+
+---
+
+## 3. Configuración en Render (Backend)
+
+El backend necesita validar el token. Aunque técnicamente solo necesita el Client ID para validar, es buena práctica tener ambos si planeas usar más funciones de Google.
+
+1.  Ve a tu servicio en **Render**.
+2.  **Environment**.
+3.  Agrega las variables:
+    *   **Key**: `GOOGLE_CLIENT_ID`
+    *   **Value**: (Pega tu Client ID aquí)
+    *   **Key**: `GOOGLE_CLIENT_SECRET` (Opcional para validación simple, pero recomendado)
+    *   **Value**: (Pega tu Client Secret aquí)
+
+---
+
+## 4. Código Necesario
+
+### A. Frontend (React + @react-oauth/google)
+
+Instala la librería:
+```bash
+npm install @react-oauth/google
+```
+
+En tu `main.jsx` (o donde envuelvas la app):
+```jsx
+import { GoogleOAuthProvider } from '@react-oauth/google';
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+    <App />
+  </GoogleOAuthProvider>
+);
+```
+
+En tu componente de Login:
+```jsx
+import { GoogleLogin } from '@react-oauth/google';
+import axios from '../config/axios'; // Tu instancia de axios configurada
+
+// ... dentro de tu componente
+<GoogleLogin
+  onSuccess={async (credentialResponse) => {
+    try {
+      const res = await axios.post('/api/auth/google', {
+        token: credentialResponse.credential
+      });
+      console.log('Login exitoso:', res.data);
+      // Guardar usuario y redirigir
+    } catch (error) {
+      console.error('Error en login:', error);
+    }
+  }}
+  onError={() => {
+    console.log('Login fallido');
+  }}
+/>
+```
+
+### B. Backend (Python/Flask)
+
+Instala la librería:
+```bash
+pip install google-auth
+```
+(Asegúrate de agregar `google-auth` a tu `requirements.txt`)
+
+En tu `app.py`:
+```python
+from google.oauth2 import id_token
+from google.auth.transport import requests
+import os
+
+@app.route('/api/auth/google', methods=['POST'])
+def google_auth():
+    data = request.get_json()
+    token = data.get('token')
+    
+    try:
+        # Validar el token con Google
+        id_info = id_token.verify_oauth2_token(
+            token, 
+            requests.Request(), 
+            os.environ.get('GOOGLE_CLIENT_ID')
+        )
+
+        # Si llegamos aquí, el token es válido.
+        # id_info contiene: email, name, picture, etc.
+        email = id_info['email']
+        name = id_info['name']
+        
+        # Lógica de tu DB:
+        # 1. Buscar usuario por email
+        # 2. Si no existe, crearlo
+        # 3. Iniciar sesión (login_user)
+        
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            # Crear usuario nuevo (quizás con password aleatorio o nulo)
+            user = User(username=email, email=email, name=name, password="GOOGLE_LOGIN")
+            db.session.add(user)
+            db.session.commit()
+            
+        login_user(user)
+        return jsonify({"message": "Login exitoso", "user": user.username})
+
+    except ValueError:
+        # Token inválido
+        return jsonify({"error": "Token inválido"}), 401
+```
+
+---
+
+## 5. Solución de Problemas Comunes
+
+### Error: "The given origin is not allowed"
+*   **Causa**: No pusiste la URL exacta de Vercel en "Authorized JavaScript origins" en Google Cloud.
+*   **Solución**: Revisa que sea `https://eco-etitc.vercel.app` (sin `/` al final).
+
+### Error: "popup_closed_by_user"
+*   **Causa**: El usuario cerró la ventana antes de terminar.
+*   **Solución**: Maneja este error en el `onError` del componente.
+
+### Error 401 en el Backend
+*   **Causa**: El `GOOGLE_CLIENT_ID` en el backend no coincide con el del frontend.
+*   **Solución**: Verifica las variables de entorno en Render y Vercel.
