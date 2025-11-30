@@ -61,6 +61,22 @@ git push    # Sube los últimos cambios
 
 ## 🔧 PARTE 1: Desplegar el Backend en Render {#parte-1-backend}
 
+### 📁 Verificación de Estructura Backend
+
+Antes de empezar, confirma que tu carpeta `backend` tiene estos archivos **OBLIGATORIOS**:
+
+| Archivo | Función | ¿Es obligatorio? |
+|---------|---------|------------------|
+| `Dockerfile` | Instrucciones para construir el contenedor | ✅ **SÍ** |
+| `requirements.txt` | Lista de librerías Python necesarias | ✅ **SÍ** |
+| `app.py` | El código principal de tu servidor | ✅ **SÍ** |
+| `init_db.py` | Script para iniciar la base de datos | ✅ **SÍ** |
+| `Procfile` | Comando de arranque (opcional si usas Docker) | ⚠️ Recomendado |
+
+👉 **Carpeta a "amarrar" en Render (Root Directory):** `backend`
+
+---
+
 ### Paso 1.1: Crear la Base de Datos PostgreSQL
 
 1. **Acceder a Render**
@@ -185,6 +201,22 @@ git push    # Sube los últimos cambios
 ---
 
 ## 🎨 PARTE 2: Desplegar el Frontend en Vercel {#parte-2-frontend}
+
+### 📁 Verificación de Estructura Frontend
+
+Antes de empezar, confirma que tu carpeta `frontend` tiene estos archivos **OBLIGATORIOS**:
+
+| Archivo | Función | ¿Es obligatorio? |
+|---------|---------|------------------|
+| `package.json` | Configuración del proyecto y dependencias | ✅ **SÍ** |
+| `vite.config.js` | Configuración del empaquetador Vite | ✅ **SÍ** |
+| `vercel.json` | Configuración de rutas para Vercel | ✅ **SÍ** |
+| `index.html` | Archivo base de la página web | ✅ **SÍ** |
+| `src/` | Carpeta con todo el código fuente (React) | ✅ **SÍ** |
+
+👉 **Carpeta a "amarrar" en Vercel (Root Directory):** `frontend`
+
+---
 
 ### Paso 2.1: Preparar Vercel
 
