@@ -4,6 +4,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_bcrypt import Bcrypt
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret-key-change-me'
@@ -111,4 +114,4 @@ def get_current_user():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', port=5001, debug=True)
