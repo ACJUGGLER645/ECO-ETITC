@@ -44,6 +44,14 @@ class Comment(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = db.relationship('User', backref=db.backref('comments', lazy=True))
 
+class ForumPost(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    date = db.Column(db.String(20), nullable=False) # Guardamos la fecha como string simple por ahora
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = db.relationship('User', backref=db.backref('forum_posts', lazy=True))
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -187,6 +195,44 @@ def like_comment(comment_id):
     comment.likes += 1
     db.session.commit()
     return jsonify({"likes": comment.likes})
+
+# --- RUTAS DEL FORO ---
+@app.route('/api/forum', methods=['GET'])
+def get_forum_posts():
+    posts = ForumPost.query.order_by(ForumPost.id.desc()).all()
+    return jsonify([{
+        "id": p.id, 
+        "title": p.title, 
+        "content": p.content, 
+        "date": p.date,
+        "username": p.user.username
+    } for p in posts])
+
+@app.route('/api/forum', methods=['POST'])
+@login_required
+def add_forum_post():
+    data = request.get_json()
+    from datetime import datetime
+    
+    new_post = ForumPost(
+        title=data['title'], 
+        content=data['content'],
+        date=datetime.now().strftime("%d/%m/%Y"),
+        user_id=current_user.id
+    )
+    db.session.add(new_post)
+    db.session.commit()
+    return jsonify({
+        "message": "Post created", 
+        "post": {
+            "id": new_post.id, 
+            "title": new_post.title, 
+            "content": new_post.content, 
+            "date": new_post.date,
+            "username": current_user.username
+        }
+    })
+# ----------------------
 
 @app.route('/api/user', methods=['GET'])
 def get_current_user():

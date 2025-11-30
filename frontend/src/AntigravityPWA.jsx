@@ -58,6 +58,21 @@ const AntigravityPWA = () => {
         }
     };
 
+    const fetchForumPosts = async () => {
+        try {
+            const res = await api.get('/api/forum');
+            setForumPosts(res.data);
+        } catch (err) {
+            console.error("Error fetching forum posts", err);
+        }
+    };
+
+    useEffect(() => {
+        if (view === 'forum') {
+            fetchForumPosts();
+        }
+    }, [view]);
+
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
@@ -553,14 +568,17 @@ const AntigravityPWA = () => {
                             {user ? (
                                 <div className="bg-primary/5 border border-primary/20 rounded-xl p-6">
                                     <h3 className="font-bold text-gray-800 dark:text-white mb-4">Crear Nueva Publicación</h3>
-                                    <form onSubmit={(e) => {
+                                    <form onSubmit={async (e) => {
                                         e.preventDefault();
                                         if (newForumPost.title.trim() && newForumPost.content.trim()) {
-                                            setForumPosts([
-                                                { id: Date.now(), ...newForumPost, username: user.username, date: new Date().toLocaleDateString() },
-                                                ...forumPosts
-                                            ]);
-                                            setNewForumPost({ title: '', content: '' });
+                                            try {
+                                                const res = await api.post('/api/forum', newForumPost);
+                                                setForumPosts([res.data.post, ...forumPosts]);
+                                                setNewForumPost({ title: '', content: '' });
+                                            } catch (err) {
+                                                console.error("Error creating post", err);
+                                                alert("Error al publicar. Asegúrate de haber iniciado sesión.");
+                                            }
                                         }
                                     }}>
                                         <input
