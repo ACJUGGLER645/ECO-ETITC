@@ -464,6 +464,60 @@ const AntigravityPWA = () => {
                             </div>
                         </article>
 
+                        {/* Third Article Section: Colombia */}
+                        <article className="glass-card mb-8">
+                            <header className="mb-6">
+                                <span className="inline-block px-3 py-1 rounded-full bg-yellow-500/10 text-yellow-600 text-xs font-bold mb-2">
+                                    COLOMBIA BIODIVERSA
+                                </span>
+                                <h2 className="text-3xl md:text-4xl font-black text-gray-800 dark:text-white mb-4 leading-tight">
+                                    Colombia: Guardiana del Agua y la Vida
+                                </h2>
+                                <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                                    <span>Por EcoTeam Colombia</span>
+                                    <span>•</span>
+                                    <span>Noviembre 30, 2025</span>
+                                </div>
+                            </header>
+
+                            <div className="prose dark:prose-invert max-w-none text-gray-600 dark:text-gray-300 leading-relaxed">
+                                <p className="text-lg mb-4">
+                                    Nuestro país es un verdadero paraíso ecológico. Colombia ocupa el segundo lugar en biodiversidad a nivel mundial
+                                    y es el primero en especies de aves y orquídeas. Sin embargo, esta riqueza conlleva una inmensa responsabilidad.
+                                </p>
+
+                                <img
+                                    src="https://images.unsplash.com/photo-1596328864936-2e959784a276?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+                                    alt="Valle del Cocora Colombia"
+                                    className="w-full h-64 object-cover rounded-xl my-6 shadow-md"
+                                />
+
+                                <h3 className="text-2xl font-bold text-yellow-600 mb-3">Nuestros Tesoros Naturales</h3>
+                                <p className="mb-4">
+                                    Desde los páramos que abastecen de agua al 70% de la población, hasta la inmensidad de la Amazonía y la
+                                    riqueza de nuestros dos océanos. Proteger estos ecosistemas es vital no solo para nosotros, sino para el planeta entero.
+                                </p>
+
+                                <h3 className="text-2xl font-bold text-yellow-600 mb-3">El Reto Colombiano</h3>
+                                <ul className="list-disc list-inside mb-4 space-y-2">
+                                    <li><strong>Protección de Páramos:</strong> Son nuestras fábricas de agua y están amenazados por el cambio climático.</li>
+                                    <li><strong>Deforestación:</strong> Debemos detener la tala en la Amazonía y proteger nuestros bosques nativos.</li>
+                                    <li><strong>Reciclaje:</strong> En Colombia solo reciclamos cerca del 17% de los residuos. ¡Podemos mejorar!</li>
+                                </ul>
+
+                                <div className="bg-yellow-500/10 border-l-4 border-yellow-500 p-4 rounded-r-xl my-6">
+                                    <p className="font-semibold text-gray-800 dark:text-white">
+                                        "La paz con la naturaleza es la única paz que garantiza la supervivencia de la humanidad."
+                                    </p>
+                                </div>
+
+                                <p className="text-lg font-semibold">
+                                    Como colombianos, tenemos el privilegio de vivir en una de las naciones más bellas de la Tierra.
+                                    Cuidar nuestra "casa común" empieza en nuestros hogares, barrios y ciudades.
+                                </p>
+                            </div>
+                        </article>
+
                         {/* Comments Section */}
                         <section className="glass-card">
                             <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">Discusión de la Comunidad</h3>
