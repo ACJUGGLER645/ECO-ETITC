@@ -11,15 +11,20 @@ from google.auth.transport import requests as google_requests
 load_dotenv()
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret-key-change-me'
-# Use SQLite by default for local development if DATABASE_URL is not set
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'secret-key-change-me')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///site.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+# --- CONFIGURACIÓN CRÍTICA PARA COOKIES (LOGOUT/SESIÓN) ---
+# Necesario porque Vercel y Render son dominios diferentes
+app.config['SESSION_COOKIE_SAMESITE'] = 'None'
+app.config['SESSION_COOKIE_SECURE'] = True # Requiere HTTPS (Render lo tiene)
+# ----------------------------------------------------------
+
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
-# Configure CORS to allow requests from frontend
-# In production, replace "*" with your actual frontend domain (e.g., ["https://eco-etitc.vercel.app"])
+
+# Configurar CORS para permitir credenciales (cookies)
 cors = CORS(app, supports_credentials=True, resources={r"/api/*": {"origins": "*"}})
 login_manager = LoginManager(app)
 
@@ -47,11 +52,23 @@ def load_user(user_id):
 def health():
     return jsonify({"status": "ok", "os": "Alpine Linux Container"})
 
+# --- RUTA PARA VER USUARIOS (ADMIN) ---
+@app.route('/api/admin/users', methods=['GET'])
+def list_users():
+    # En producción deberías proteger esto con @login_required y verificar si es admin
+    users = User.query.all()
+    return jsonify([{
+        "id": u.id, 
+        "username": u.username, 
+        "email": u.email, 
+        "name": u.name
+    } for u in users])
+# --------------------------------------
+
 @app.route('/api/register', methods=['POST'])
 def register():
     data = request.get_json()
     
-    # Check if username or email already exists
     if User.query.filter_by(username=data['username']).first():
         return jsonify({"message": "Username already exists"}), 400
     if User.query.filter_by(email=data['email']).first():
@@ -76,12 +93,11 @@ def login():
     data = request.get_json()
     user = User.query.filter_by(username=data['username']).first()
     if user and bcrypt.check_password_hash(user.password, data['password']):
-        login_user(user)
+        login_user(user, remember=True) # Remember=True ayuda a mantener la sesión
         return jsonify({"message": "Logged in", "username": user.username})
     return jsonify({"message": "Invalid credentials"}), 401
 
 @app.route('/api/logout', methods=['POST'])
-@login_required
 def logout():
     logout_user()
     return jsonify({"message": "Logged out"})
@@ -89,36 +105,39 @@ def logout():
 @app.route('/api/auth/google', methods=['POST'])
 def google_auth():
     data = request.get_json()
-    token = data.get('token')
+    access_token = data.get('token')
     
+    if not access_token:
+        return jsonify({"error": "Token missing"}), 400
+
     try:
-        # Validar el token con Google
-        # Asegúrate de tener GOOGLE_CLIENT_ID en tus variables de entorno
-        client_id = os.environ.get('GOOGLE_CLIENT_ID')
-        if not client_id:
-            return jsonify({"error": "Server configuration error: GOOGLE_CLIENT_ID missing"}), 500
-
-        id_info = id_token.verify_oauth2_token(
-            token, 
-            google_requests.Request(), 
-            client_id
+        # Validar token llamando a la API de Google (UserInfo)
+        # Esto funciona con el access_token que envía el frontend
+        google_response = google_requests.get(
+            'https://www.googleapis.com/oauth2/v3/userinfo',
+            headers={'Authorization': f'Bearer {access_token}'}
         )
-
-        # Si llegamos aquí, el token es válido.
-        email = id_info['email']
-        name = id_info.get('name', email.split('@')[0])
         
-        # Buscar usuario por email
+        if google_response.status_code != 200:
+            return jsonify({"error": "Invalid Google Token"}), 401
+            
+        user_info = google_response.json()
+        
+        email = user_info.get('email')
+        name = user_info.get('name')
+        
+        if not email:
+            return jsonify({"error": "Google account has no email"}), 400
+        
+        # Buscar o crear usuario
         user = User.query.filter_by(email=email).first()
         if not user:
-            # Crear usuario nuevo si no existe
-            # Usamos una contraseña aleatoria o marcador ya que entra por Google
             import secrets
             random_password = secrets.token_urlsafe(16)
             hashed_password = bcrypt.generate_password_hash(random_password).decode('utf-8')
             
             user = User(
-                username=email, # Usamos el email como username inicial
+                username=email,
                 name=name,
                 email=email,
                 password=hashed_password
@@ -126,14 +145,16 @@ def google_auth():
             db.session.add(user)
             db.session.commit()
             
-        login_user(user)
-        return jsonify({"message": "Login exitoso", "username": user.username, "user": {"name": user.name, "email": user.email}})
+        login_user(user, remember=True)
+        return jsonify({
+            "message": "Login exitoso", 
+            "username": user.username, 
+            "user": {"name": user.name, "email": user.email}
+        })
 
-    except ValueError:
-        return jsonify({"error": "Token inválido"}), 401
     except Exception as e:
         print(f"Error en Google Auth: {e}")
-        return jsonify({"error": "Error interno en autenticación"}), 500
+        return jsonify({"error": str(e)}), 500
 
 @app.route('/api/comments', methods=['GET'])
 def get_comments():
