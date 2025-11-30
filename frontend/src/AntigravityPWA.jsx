@@ -727,6 +727,17 @@ const AntigravityPWA = () => {
                                         required
                                     />
                                 </div>
+                                {view === 'login' && (
+                                    <div className="text-right">
+                                        <button
+                                            type="button"
+                                            onClick={() => alert("💡 Tip de Recuperación:\n\nSi registraste tu correo real, ¡puedes usar el botón 'Google' de abajo para entrar sin contraseña!\n\nSi no, por favor contacta al administrador del sistema.")}
+                                            className="text-xs text-primary hover:text-green-600 transition-colors"
+                                        >
+                                            ¿Olvidaste tu contraseña?
+                                        </button>
+                                    </div>
+                                )}
                                 <button type="submit" className="w-full btn-primary mt-4">
                                     {view === 'login' ? 'Iniciar Sesión' : 'Registrarse'}
                                 </button>
