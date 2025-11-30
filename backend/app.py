@@ -137,8 +137,18 @@ def google_auth():
             random_password = secrets.token_urlsafe(16)
             hashed_password = bcrypt.generate_password_hash(random_password).decode('utf-8')
             
+            # Generar username basado en el nombre (o parte del email si no hay nombre)
+            base_username = name if name else email.split('@')[0]
+            username = base_username
+            
+            # Asegurar que el username sea único
+            counter = 1
+            while User.query.filter_by(username=username).first():
+                username = f"{base_username} {counter}"
+                counter += 1
+            
             user = User(
-                username=email,
+                username=username, # Ahora usamos el nombre real
                 name=name,
                 email=email,
                 password=hashed_password
