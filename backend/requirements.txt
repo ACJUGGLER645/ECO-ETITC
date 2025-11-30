@@ -6,3 +6,5 @@ flask-bcrypt
 psycopg2-binary
 gunicorn
 python-dotenv
+google-auth
+requests

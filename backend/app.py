@@ -5,6 +5,8 @@ from flask_cors import CORS
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv
+from google.oauth2 import id_token
+from google.auth.transport import requests as google_requests
 
 load_dotenv()
 
@@ -83,6 +85,55 @@ def login():
 def logout():
     logout_user()
     return jsonify({"message": "Logged out"})
+
+@app.route('/api/auth/google', methods=['POST'])
+def google_auth():
+    data = request.get_json()
+    token = data.get('token')
+    
+    try:
+        # Validar el token con Google
+        # Asegúrate de tener GOOGLE_CLIENT_ID en tus variables de entorno
+        client_id = os.environ.get('GOOGLE_CLIENT_ID')
+        if not client_id:
+            return jsonify({"error": "Server configuration error: GOOGLE_CLIENT_ID missing"}), 500
+
+        id_info = id_token.verify_oauth2_token(
+            token, 
+            google_requests.Request(), 
+            client_id
+        )
+
+        # Si llegamos aquí, el token es válido.
+        email = id_info['email']
+        name = id_info.get('name', email.split('@')[0])
+        
+        # Buscar usuario por email
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            # Crear usuario nuevo si no existe
+            # Usamos una contraseña aleatoria o marcador ya que entra por Google
+            import secrets
+            random_password = secrets.token_urlsafe(16)
+            hashed_password = bcrypt.generate_password_hash(random_password).decode('utf-8')
+            
+            user = User(
+                username=email, # Usamos el email como username inicial
+                name=name,
+                email=email,
+                password=hashed_password
+            )
+            db.session.add(user)
+            db.session.commit()
+            
+        login_user(user)
+        return jsonify({"message": "Login exitoso", "username": user.username, "user": {"name": user.name, "email": user.email}})
+
+    except ValueError:
+        return jsonify({"error": "Token inválido"}), 401
+    except Exception as e:
+        print(f"Error en Google Auth: {e}")
+        return jsonify({"error": "Error interno en autenticación"}), 500
 
 @app.route('/api/comments', methods=['GET'])
 def get_comments():

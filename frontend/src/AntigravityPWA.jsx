@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useGoogleLogin } from '@react-oauth/google';
 import api from './config/axios';
 import RecyclingGame from './RecyclingGame';
 import EcoQuiz from './EcoQuiz';
@@ -71,16 +72,28 @@ const AntigravityPWA = () => {
         }
     };
 
-    const handleGoogleLogin = () => {
-        // Placeholder for Google Auth Logic
-        // In a real app, you would use Firebase Auth or Google Identity Services here.
-        // Example: signInWithPopup(auth, provider).then((result) => { ... })
+    const handleGoogleLogin = useGoogleLogin({
+        onSuccess: async (tokenResponse) => {
+            try {
+                // Enviamos el token al backend para validación
+                const res = await api.post('/api/auth/google', {
+                    token: tokenResponse.credential || tokenResponse.access_token // Depende del flujo, normalmente credential para ID token
+                });
 
-        alert("Esta es una simulación de inicio de sesión con Google. Para implementar esto realmente, necesitas configurar un proyecto en Google Cloud Console y usar Firebase Auth o una librería similar.");
-
-        setUser({ username: 'GoogleUser', name: 'Usuario de Google' });
-        setView('home');
-    };
+                // Si el backend devuelve éxito
+                setUser({ username: res.data.username, ...res.data.user });
+                setView('home');
+                setError('');
+            } catch (err) {
+                console.error("Error en login de Google:", err);
+                setError('Error al iniciar sesión con Google');
+            }
+        },
+        onError: () => {
+            setError('Inicio de sesión con Google fallido');
+        },
+        flow: 'implicit' // O 'auth-code' si prefieres manejar códigos en el backend
+    });
 
     const handleRegister = async (e) => {
         e.preventDefault();

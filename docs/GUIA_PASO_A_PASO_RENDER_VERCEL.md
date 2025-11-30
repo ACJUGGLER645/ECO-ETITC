@@ -167,6 +167,10 @@ Antes de empezar, confirma que tu carpeta `backend` tiene estos archivos **OBLIG
    - **Key**: `FLASK_ENV`
    - **Value**: `production`
 
+   **Variable 4 (Para Google Auth):**
+   - **Key**: `GOOGLE_CLIENT_ID`
+   - **Value**: Tu Client ID de Google Cloud Console (ver `docs/GOOGLE_AUTH_SETUP.md`)
+
 5. **Opciones Avanzadas (Opcional)**
    - **Auto-Deploy**: Déjalo en **"Yes"** para que se redespliegue automáticamente con cada `git push`
    - **Build Command**: (Déjalo vacío, Docker lo maneja)
@@ -274,6 +278,10 @@ Antes de empezar, confirma que tu carpeta `frontend` tiene estos archivos **OBLI
      - Incorrecto: `https://eco-etitc-backend.onrender.com/api`
 
    - **Environment**: Selecciona **"Production"**, **"Preview"**, y **"Development"** (todas)
+
+   **Variable 2 (Para Google Auth):**
+   - **Key**: `VITE_GOOGLE_CLIENT_ID`
+   - **Value**: Tu Client ID de Google Cloud Console (ver `docs/GOOGLE_AUTH_SETUP.md`)
 
 4. **Desplegar**
    - Revisa toda la configuración
