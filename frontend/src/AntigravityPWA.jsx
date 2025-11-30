@@ -169,7 +169,9 @@ const AntigravityPWA = () => {
         { id: 'z4vHLa36Wsg', title: 'Cambio Climático | Lo que haces cuenta | NatGeo' },
         { id: 'aWgHk8Mso0s', title: '¿Por qué cuidar el medio ambiente?' },
         { id: 'o5bbeJR7Ddg', title: 'Hábitos que perjudican al medio ambiente' },
-        { id: 'CLq6tykbIrk', title: 'Para cuidar el ambiente, la conciencia no alcanza | TEDx' }
+        { id: 'CLq6tykbIrk', title: 'Para cuidar el ambiente, la conciencia no alcanza | TEDx' },
+        { id: 'sKgSyDusN1A', title: 'Biodiversidad de Colombia' },
+        { id: '2lmToTUYShA', title: 'Cambio Climático y Sostenibilidad' }
     ];
 
     return (
@@ -487,7 +489,7 @@ const AntigravityPWA = () => {
                                 </p>
 
                                 <img
-                                    src="https://images.unsplash.com/photo-1596328864936-2e959784a276?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+                                    src="https://images.unsplash.com/photo-1589394815804-964ed0be2eb5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
                                     alt="Valle del Cocora Colombia"
                                     className="w-full h-64 object-cover rounded-xl my-6 shadow-md"
                                 />
@@ -581,7 +583,7 @@ const AntigravityPWA = () => {
                                         rows="3"
                                     />
                                     <button type="submit" className="btn-primary">
-                                        Publicar Comentario
+                                        Publicar
                                     </button>
                                 </form>
                             ) : (
